@@ -6,20 +6,29 @@ public class SoundManager : MonoBehaviour {
 
     public static SoundManager instance;
 
+
+    public AudioClip music;
+
     public AudioClip switch_enemy;
     public AudioClip[] monster_sound;
     public AudioClip sword_draw;
     public AudioClip[] sword_slash;
     public AudioClip slash_fail;
 
+
     void Awake()
     {
         instance = this;
     }
 
-    void PlayClip(AudioClip clip)
+    void PlayClip(AudioClip clip, float volume = 1f)
     {
-        AudioSource.PlayClipAtPoint(clip, Camera.main.transform.position);
+        AudioSource.PlayClipAtPoint(clip, Camera.main.transform.position, volume);
+    }
+
+    public void PlayMusic()
+    {
+        PlayClip(music, 0.3f);
     }
 
     public void PlaySwitchEnemy()

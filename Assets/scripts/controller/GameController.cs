@@ -14,7 +14,13 @@ public class GameController : MonoBehaviour {
     bool tickWaiting = false;
     float t_waiting = 0f;
 
-	void Start ()
+    public ConductorView player;
+    public Transform spawn_monster;
+    MonsterView monster, monsterOld;
+
+    public GameObject prefab_monster;
+
+    void Start ()
     {
         BeatController.instance.OnTickUpdate += OnTickUpdate;
         BeatController.instance.OnPatternTick += OnPatternTick;
@@ -34,14 +40,15 @@ public class GameController : MonoBehaviour {
             t_introCountdown -= Time.deltaTime;
             if (t_introCountdown < 0f)
             {
-                StartSound();
+                StartGame();
             }
         }
     }
 
-    void StartSound()
+    void StartGame()
     {
         BeatController.instance.StartPlaying();
+        SpawnNewMonster();
     }
 
     void OnTickUpdate()
@@ -71,7 +78,7 @@ public class GameController : MonoBehaviour {
         }
         else
         {
-            if(!tickNextIgnore && !failed)
+            if(!tickNextIgnore)
             {
                 tickWaiting = true;
                 t_waiting = 0f;
@@ -96,6 +103,7 @@ public class GameController : MonoBehaviour {
         else
         {
             OnTurnMonster();
+            SoundManager.instance.PlayMusic();
         }
     }
 
@@ -103,7 +111,7 @@ public class GameController : MonoBehaviour {
     void UpdateInput()
     {
         // only update during player turn
-        if (!turnPlayer || failed) return;
+        if (!turnPlayer) return;
 
         // check if input came at the right time
         if (Input.GetKeyDown(KeyCode.Space))
@@ -125,20 +133,35 @@ public class GameController : MonoBehaviour {
             t_waiting += Time.deltaTime;
             if (t_waiting > t_hitThreshold)
             {
-                OnSlashFail();
+                OnMiss();
             }
         }
+    }
+
+
+    void SpawnNewMonster()
+    {
+        // fade old monster out
+        if (monster != null)
+        {
+            monster.PlayAnimationFadeOut();
+            monsterOld = monster;
+        }
+
+        // fade new monster
+        var go = (GameObject)GameObject.Instantiate(prefab_monster, Vector3.zero, Quaternion.identity);
+        go.transform.parent = spawn_monster;
+        monster = go.GetComponent<MonsterView>();
+        monster.PlayAnimationFadeIn();
+
+        // update music
+        BeatController.instance.SelectPatterRandom();
     }
 
     void OnMonsterDead()
     {
         Debug.Log("Monster defeated");
         SpawnNewMonster();
-    }
-
-    void SpawnNewMonster()
-    {
-        BeatController.instance.SelectPatterRandom();
     }
 
     void OnTurnMonster()
@@ -155,6 +178,13 @@ public class GameController : MonoBehaviour {
     void OnTurnPlayer()
     {
         Debug.Log("Your Turn!");
+    }
+
+    void OnMiss()
+    {
+        Debug.Log("FAIL!!!");
+        failed = true;
+        tickWaiting = tickNextIgnore = false;
     }
 
     void OnSlashFail()

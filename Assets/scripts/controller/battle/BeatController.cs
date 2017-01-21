@@ -131,6 +131,7 @@ public class BeatController : MonoBehaviour
     {
         var p = Random.Range(0, patterns.Length);
         pattern = patterns[p];
+        //pattern = patterns[0];
     }
 
     public float getDistanceClosestTick()
