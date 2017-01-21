@@ -1,3 +1,7 @@
+.vs/
 Temp/
 Library/
+obj/
 *.log
+*.csproj
+*.sln
