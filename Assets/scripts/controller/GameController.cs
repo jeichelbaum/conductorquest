@@ -93,9 +93,17 @@ public class GameController : MonoBehaviour {
 
     void OnBarUpdate()
     {
+        // start music again after 8 bars
+        if (BeatController.instance.bar % 8 == 0)
+        {
+            SoundManager.instance.PlayMusic();
+        }
+
+        // switch turn
         turnPlayer = !turnPlayer;
         failed = tickNextIgnore = tickWaiting = false;
 
+        // init turn depending on state
         if(turnPlayer)
         {
             OnTurnPlayer();
@@ -103,7 +111,6 @@ public class GameController : MonoBehaviour {
         else
         {
             OnTurnMonster();
-            SoundManager.instance.PlayMusic();
         }
     }
 
