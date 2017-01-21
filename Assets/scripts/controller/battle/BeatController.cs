@@ -20,18 +20,20 @@ public class BeatController : MonoBehaviour
     float beatInterval = 0f;
     float tickInterval = 0f;
 
+    public bool selectRandomPattern = false;
+
     float time = 0f;
     public int tick = -1;
     public int beat = -1;
     public int bar = -1;
     public bool isPlaying = false;
     
-    List<int> r1 = new List<int>(new int[] { 0, 4, 8, 12 });
-    List<int> r2 = new List<int>(new int[] { 0, 4, 10 });
-    List<int> r3 = new List<int>(new int[] { 0, 4, 6, 8, 12 });
-    List<int> r4 = new List<int>(new int[] { 0, 4, 7, 10 });
-    List<int> r5 = new List<int>(new int[] { 0, 6, 7, 10 });
+    List<int> r1 = new List<int>(new int[] { 0, 4, 8, 12, 16, 20, 24 });
+    List<int> r3 = new List<int>(new int[] { 0, 4, 6, 8, 12, 16, 18, 20, 24 });
+    List<int> r2 = new List<int>(new int[] { 0, 4, 10, 14, 20, 24 });
+    List<int> r4 = new List<int>(new int[] { 0, 4, 7, 10, 16, 20, 23, 26 });
 
+    int patternIndex = -1;
     List<int>[] patterns;
     List<int> pattern;
 
@@ -40,8 +42,7 @@ public class BeatController : MonoBehaviour
         beatInterval = 60f / bpm;
         tickInterval = beatInterval / 4f;
 
-        patterns = new List<int>[] { r1, r2, r3, r4, r5 };
-        SelectPatterRandom();
+        patterns = new List<int>[] { r1, r2, r3, r4 };
 
         instance = this;
     }
@@ -59,11 +60,11 @@ public class BeatController : MonoBehaviour
         if (time > tickInterval) // TICK
         {
             time -= tickInterval;
-            tick = (tick + 1) % 16;
+            tick = (tick + 1) % 32;
 
             if (tick % 4 == 0) // BEAT
             {
-                beat = (beat + 1) % 4;
+                beat = (beat + 1) % 8;
 
                 if (beat == 0) // BAR
                 {
@@ -129,9 +130,16 @@ public class BeatController : MonoBehaviour
 
     public void SelectPatterRandom()
     {
-        var p = Random.Range(0, patterns.Length);
-        pattern = patterns[p];
-        pattern = patterns[0];
+        if (selectRandomPattern)
+        {
+            var p = Random.Range(0, patterns.Length);
+            pattern = patterns[p];
+        } 
+        else
+        {
+            patternIndex = (patternIndex + 1) % patterns.Length;
+            pattern = patterns[patternIndex];
+        }
     }
 
     public float getDistanceClosestTick()

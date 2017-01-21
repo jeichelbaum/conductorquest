@@ -8,7 +8,7 @@ public class GameController : MonoBehaviour {
 
     float t_introCountdown = 1f;
 
-    bool turnPlayer = true;
+    bool turnPlayer = false;
     bool failed = false;
     bool tickNextIgnore = false;
     bool tickWaiting = false;
@@ -53,20 +53,9 @@ public class GameController : MonoBehaviour {
 
     void OnTickUpdate()
     {
-        if (BeatController.instance.tick == 14)
+        if (BeatController.instance.tick == 28)
         {
-            if (!turnPlayer)
-            {
-                SoundManager.instance.PlaySwitchEnemy();
-            }
-            else
-            {
-                SoundManager.instance.PlaySwitchEnemy();
-                if (!failed)
-                {
-                    OnMonsterDead();
-                }
-            }
+            OnTurnEnded();
         }
     }
 
@@ -99,19 +88,6 @@ public class GameController : MonoBehaviour {
             SoundManager.instance.PlayMusic();
         }
 
-        // switch turn
-        turnPlayer = !turnPlayer;
-        failed = tickNextIgnore = tickWaiting = false;
-
-        // init turn depending on state
-        if(turnPlayer)
-        {
-            OnTurnPlayer();
-        }
-        else
-        {
-            OnTurnMonster();
-        }
     }
 
 
@@ -170,21 +146,11 @@ public class GameController : MonoBehaviour {
         Debug.Log("Monster defeated");
         SpawnNewMonster();
     }
-
-    void OnTurnMonster()
-    {
-
-    }
+    
 
     void OnMonsterTick()
     {
         SoundManager.instance.PlaySwordSlash(0);
-    }
-
-
-    void OnTurnPlayer()
-    {
-        Debug.Log("Your Turn!");
     }
 
     void OnMiss()
@@ -213,5 +179,28 @@ public class GameController : MonoBehaviour {
         {
             tickNextIgnore = true;
         }
+    }
+
+    void OnTurnEnded()
+    {
+        // play switching sound
+        if (!turnPlayer)
+        {
+            SoundManager.instance.PlaySwitchEnemy();
+        }
+        else
+        {
+            SoundManager.instance.PlaySwitchEnemy();
+            if (!failed)
+            {
+                OnMonsterDead();
+            }
+        }
+
+        // switch turn
+        turnPlayer = !turnPlayer;
+        failed = tickNextIgnore = tickWaiting = false;
+
+        // init turn depending on state
     }
 }
