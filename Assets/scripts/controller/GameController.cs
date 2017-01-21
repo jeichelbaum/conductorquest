@@ -17,10 +17,8 @@ public class GameController : MonoBehaviour {
     public ConductorView player;
     public Transform spawn_monster;
     MonsterView monster, monsterOld;
-
     public BackgroundView background;
-
-    public GameObject prefab_monster;
+    
 
     void Start ()
     {
@@ -135,7 +133,7 @@ public class GameController : MonoBehaviour {
         }
 
         // fade new monster
-        var go = (GameObject)GameObject.Instantiate(prefab_monster, Vector3.zero, Quaternion.identity);
+        var go = (GameObject)GameObject.Instantiate(MonsterConfigs.instance.monsterPrefabs[0], Vector3.zero, Quaternion.identity);
         go.transform.parent = spawn_monster;
         monster = go.GetComponent<MonsterView>();
         monster.PlayAnimationFadeIn();
@@ -146,7 +144,6 @@ public class GameController : MonoBehaviour {
 
     void OnMonsterDead()
     {
-        Debug.Log("Monster defeated");
         SpawnNewMonster();
     }
     
@@ -158,14 +155,12 @@ public class GameController : MonoBehaviour {
 
     void OnMiss()
     {
-        Debug.Log("FAIL!!!");
         failed = true;
         tickWaiting = tickNextIgnore = false;
     }
 
     void OnSlashFail()
     {
-        Debug.Log("FAIL!!!");
         SoundManager.instance.PlaySlashFail();
         failed = true;
         tickWaiting = tickNextIgnore = false;

@@ -18,6 +18,18 @@ public class MonsterView : MonoBehaviour {
         animator = GetComponent<Animator>();
         BeatController.instance.OnBeatUpdate += OnBeatUpdate;
     }
+
+    void Start()
+    {
+        var body = transform.GetComponentInChildren<BodyData>();
+
+        body.GetBoneHead().GetComponentInChildren<SpriteRenderer>().sprite = MonsterConfigs.instance.GetRandomHead();
+        body.GetBoneArmLeft().GetComponentInChildren<SpriteRenderer>().sprite = MonsterConfigs.instance.GetRandomArmLeft();
+        body.GetBoneArmRight().GetComponentInChildren<SpriteRenderer>().sprite = MonsterConfigs.instance.GetRandomArmRight();
+        body.GetBoneLegs().GetComponentInChildren<SpriteRenderer>().sprite = MonsterConfigs.instance.GetRandomLegs();
+    }
+
+    
 	
 	void Update ()
     {
