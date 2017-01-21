@@ -18,6 +18,10 @@ public class MonsterConfigs : MonoBehaviour {
         instance = this;
     }
 
+    public GameObject GetRandomMonsterPrefab()
+    {
+        return monsterPrefabs[Random.Range(0, monsterPrefabs.Length)];
+    }
 
     public Sprite GetRandomHead()
     {

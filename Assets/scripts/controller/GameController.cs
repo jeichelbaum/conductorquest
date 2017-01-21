@@ -132,7 +132,8 @@ public class GameController : MonoBehaviour {
         }
 
         // fade new monster
-        var go = (GameObject)GameObject.Instantiate(MonsterConfigs.instance.monsterPrefabs[0], Vector3.zero, Quaternion.identity);
+
+        var go = (GameObject)GameObject.Instantiate(MonsterConfigs.instance.GetRandomMonsterPrefab(), Vector3.zero, Quaternion.identity);
         go.transform.parent = spawn_monster;
         monster = go.GetComponent<MonsterView>();
         monster.PlayAnimationFadeIn();
