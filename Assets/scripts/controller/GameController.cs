@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameController : MonoBehaviour {
-
+    
     public float t_hitThreshold = 0.4f;
 
     float t_introCountdown = 1f;
@@ -17,6 +17,8 @@ public class GameController : MonoBehaviour {
     public ConductorView player;
     public Transform spawn_monster;
     MonsterView monster, monsterOld;
+
+    public BackgroundView background;
 
     public GameObject prefab_monster;
 
@@ -127,6 +129,7 @@ public class GameController : MonoBehaviour {
         // fade old monster out
         if (monster != null)
         {
+            background.PlaySwitchAnimation();
             monster.PlayAnimationFadeOut();
             monsterOld = monster;
         }
@@ -200,7 +203,5 @@ public class GameController : MonoBehaviour {
         // switch turn
         turnPlayer = !turnPlayer;
         failed = tickNextIgnore = tickWaiting = false;
-
-        // init turn depending on state
     }
 }
