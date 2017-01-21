@@ -55,6 +55,10 @@ public class GameController : MonoBehaviour {
             else
             {
                 SoundManager.instance.PlaySwitchEnemy();
+                if (!failed)
+                {
+                    OnMonsterDead();
+                }
             }
         }
     }
@@ -83,9 +87,15 @@ public class GameController : MonoBehaviour {
     void OnBarUpdate()
     {
         turnPlayer = !turnPlayer;
-        if (!turnPlayer)
+        failed = tickNextIgnore = tickWaiting = false;
+
+        if(turnPlayer)
         {
-            SpawnNewMonster();
+            OnTurnPlayer();
+        }
+        else
+        {
+            OnTurnMonster();
         }
     }
 
@@ -120,11 +130,20 @@ public class GameController : MonoBehaviour {
         }
     }
 
+    void OnMonsterDead()
+    {
+        Debug.Log("Monster defeated");
+        SpawnNewMonster();
+    }
 
     void SpawnNewMonster()
     {
         BeatController.instance.SelectPatterRandom();
-        failed = tickNextIgnore = tickWaiting = false;
+    }
+
+    void OnTurnMonster()
+    {
+
     }
 
     void OnMonsterTick()
@@ -132,8 +151,15 @@ public class GameController : MonoBehaviour {
         SoundManager.instance.PlaySwordSlash(0);
     }
 
+
+    void OnTurnPlayer()
+    {
+        Debug.Log("Your Turn!");
+    }
+
     void OnSlashFail()
     {
+        Debug.Log("FAIL!!!");
         SoundManager.instance.PlaySlashFail();
         failed = true;
         tickWaiting = tickNextIgnore = false;

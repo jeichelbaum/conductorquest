@@ -27,10 +27,10 @@ public class BeatController : MonoBehaviour
     public bool isPlaying = false;
     
     List<int> r1 = new List<int>(new int[] { 0, 4, 8, 12 });
-    List<int> r2 = new List<int>(new int[] { 0, 4, 10, 14 });
+    List<int> r2 = new List<int>(new int[] { 0, 4, 10 });
     List<int> r3 = new List<int>(new int[] { 0, 4, 6, 8, 12 });
-    List<int> r4 = new List<int>(new int[] { 0, 4, 7, 10, 14 });
-    List<int> r5 = new List<int>(new int[] { 0, 6, 7, 10, 14 });
+    List<int> r4 = new List<int>(new int[] { 0, 4, 7, 10 });
+    List<int> r5 = new List<int>(new int[] { 0, 6, 7, 10 });
 
     List<int>[] patterns;
     List<int> pattern;
