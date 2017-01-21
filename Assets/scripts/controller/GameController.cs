@@ -181,22 +181,26 @@ public class GameController : MonoBehaviour {
 
     void OnTurnEnded()
     {
+        // switch turn
+        turnPlayer = !turnPlayer;
+
         // play switching sound
-        if (!turnPlayer)
+        if (turnPlayer)
         {
+            monster.SetArmRotationActive(false);
             SoundManager.instance.PlaySwitchEnemy();
         }
         else
         {
             SoundManager.instance.PlaySwitchEnemy();
+            monster.SetArmRotationActive(true);
             if (!failed)
             {
                 OnMonsterDead();
             }
         }
 
-        // switch turn
-        turnPlayer = !turnPlayer;
+        // reset values
         failed = tickNextIgnore = tickWaiting = false;
     }
 }
