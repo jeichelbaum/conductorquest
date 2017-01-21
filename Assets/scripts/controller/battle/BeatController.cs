@@ -158,4 +158,15 @@ public class BeatController : MonoBehaviour
     
         return Mathf.Abs(closest * tickInterval - (tick * tickInterval + time));
     }
+
+    public int getPatternTicksLeft()
+    {
+        int lastTick = 0;
+        for(var i = 0; i < pattern.Count; i++)
+        {
+            if (Mathf.Round((tick * tickInterval + time) / tickInterval) >= pattern[i]) lastTick = i;
+        }
+
+        return pattern.Count - 1 - lastTick;
+    }
 }

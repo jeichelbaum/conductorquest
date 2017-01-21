@@ -162,6 +162,7 @@ public class GameController : MonoBehaviour {
     void OnSlashFail()
     {
         SoundManager.instance.PlaySlashFail();
+        player.OnSlashFail();
         failed = true;
         tickWaiting = tickNextIgnore = false;
     }
@@ -169,6 +170,7 @@ public class GameController : MonoBehaviour {
     void OnSlashCorrect()
     {
         SoundManager.instance.PlaySwordSlash(0);
+        player.OnSlashCorrect();
         if (tickWaiting)
         {
             tickWaiting = false;
