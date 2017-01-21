@@ -6,7 +6,6 @@ public class SoundManager : MonoBehaviour {
 
     public static SoundManager instance;
 
-
     public AudioClip music;
 
     public AudioClip switch_enemy;
@@ -15,6 +14,7 @@ public class SoundManager : MonoBehaviour {
     public AudioClip[] sword_slash;
     public AudioClip slash_fail;
 
+    List<AudioSource> channels = new List<AudioSource>();
 
     void Awake()
     {
@@ -23,7 +23,26 @@ public class SoundManager : MonoBehaviour {
 
     void PlayClip(AudioClip clip, float volume = 1f)
     {
-        AudioSource.PlayClipAtPoint(clip, Camera.main.transform.position, volume);
+        AudioSource newChannel = null;
+        foreach(var channel in channels)
+        {
+            if(!channel.isPlaying)
+            {
+                newChannel = channel;
+                break;
+            }
+        }
+
+        if (newChannel == null)
+        {
+            newChannel = gameObject.AddComponent<AudioSource>();
+            channels.Add(newChannel);
+        }
+
+
+        newChannel.clip = clip;
+        newChannel.volume = volume;
+        newChannel.Play();
     }
 
     public void PlayMusic()

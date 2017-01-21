@@ -18,7 +18,6 @@ public class GameController : MonoBehaviour {
     public Transform spawn_monster;
     MonsterView monster, monsterOld;
     public BackgroundView background;
-    
 
     void Start ()
     {
