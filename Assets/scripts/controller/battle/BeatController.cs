@@ -60,19 +60,21 @@ public class BeatController : MonoBehaviour
         {
             time -= tickInterval;
             tick = (tick + 1) % 16;
-            OnTick();
 
             if (tick % 4 == 0) // BEAT
             {
                 beat = (beat + 1) % 4;
-                OnBeat();
 
                 if (beat == 0) // BAR
                 {
                     bar++;
                     OnBar();
                 }
+
+                OnBeat();
             }
+
+            OnTick();
         }
     }
 
@@ -129,5 +131,22 @@ public class BeatController : MonoBehaviour
     {
         var p = Random.Range(0, patterns.Length);
         pattern = patterns[p];
+    }
+
+    public float getDistanceClosestTick()
+    {
+        var closest = 0;
+        var dist = 100;
+        foreach(var t in pattern)
+        {
+            var newDist = Mathf.Abs(tick - t);
+            if(newDist < dist)
+            {
+                closest = t;
+                dist = newDist;
+            }
+        }
+    
+        return Mathf.Abs(closest * tickInterval - (tick * tickInterval + time));
     }
 }

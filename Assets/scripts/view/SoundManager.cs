@@ -32,7 +32,7 @@ public class SoundManager : MonoBehaviour {
         PlayClip(monster_sound[index]);
     }
 
-    public void PlaySwordCraw()
+    public void PlaySwordDraw()
     {
         PlayClip(sword_draw);
     }
