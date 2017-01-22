@@ -23,7 +23,6 @@ public class ConductorView : MonoBehaviour {
         animator.Play(anim_conductorBounce);
     }
 
-
     public void OnSlashCorrect()
     {
         // get possible moves and shuffle
@@ -93,11 +92,15 @@ public class ConductorView : MonoBehaviour {
 
     public void SlashToNode(int index)
     {
+        Camera.main.GetComponent<ScreenEffects>().ShowSlash(poses.GetNode(nodeIndex).pose.transform.position, poses.GetNode(index).pose.transform.position);
+
+
         // display node positions
         poses.GetNode(nodeIndex).pose.SetActive(false);
         poses.GetNode(index).pose.SetActive(true);
 
         ShowConductorStanding(false);
+
 
 
         nodeIndex = index != 8 ? index : 7;

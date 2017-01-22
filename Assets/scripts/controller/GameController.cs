@@ -92,6 +92,7 @@ public class GameController : MonoBehaviour {
 
     void UpdateInput()
     {
+
         // only update during player turn
         if (!turnPlayer) return;
 
