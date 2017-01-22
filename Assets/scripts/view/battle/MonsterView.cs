@@ -9,13 +9,18 @@ public class MonsterView : MonoBehaviour {
     string anim_monsterfadeOut = "monster_fadeout";
 
     BodyData body;
+    Transform armleft;
+    Transform armright;
 
     Animator animator;
     List<List<float>> poses = new List<List<float>>();
 
-    bool rotateArms = true;
+    bool turnMonster = true;
     bool dead = false;
     float t_dead = 0.2f;
+    bool hurtState = false;
+    float startScale = 0f;
+
 
     void Awake()
     {
@@ -39,6 +44,11 @@ public class MonsterView : MonoBehaviour {
         body.GetBoneArmLeft().GetComponentInChildren<SpriteRenderer>().sprite = MonsterConfigs.instance.GetRandomArmLeft();
         body.GetBoneArmRight().GetComponentInChildren<SpriteRenderer>().sprite = MonsterConfigs.instance.GetRandomArmRight();
         body.GetBoneLegs().GetComponentInChildren<SpriteRenderer>().sprite = MonsterConfigs.instance.GetRandomLegs();
+
+        armleft = body.GetBoneArmLeft().GetChild(0).transform;
+        armright = body.GetBoneArmRight().GetChild(0).transform;
+
+        startScale = transform.localScale.x;
     }
 
     
@@ -55,17 +65,17 @@ public class MonsterView : MonoBehaviour {
         }
     }
 
-    public void SetArmRotationActive(bool val)
+    public void SetTurnActive(bool val)
     {
-        rotateArms = val;
+        turnMonster = val;
+        UpdateHurtState(true);
     }
 
 
     int lastPose = -1;
     void OnPatternTick()
     {
-        if (!rotateArms) return;
-
+        if (!turnMonster) return;
 
         int pose = lastPose;
         while (pose == lastPose)
@@ -74,8 +84,14 @@ public class MonsterView : MonoBehaviour {
         }
         lastPose = pose;
 
-        body.GetBoneArmLeft().GetChild(0).transform.rotation = Quaternion.Euler(0f, 0f, poses[pose][0]);
-        body.GetBoneArmRight().GetChild(0).transform.rotation = Quaternion.Euler(0f, 0f, poses[pose][1]);
+        armleft.rotation = Quaternion.Euler(0f, 0f, poses[pose][0]);
+        armright.rotation = Quaternion.Euler(0f, 0f, poses[pose][1]);
+
+        if(BeatController.instance.getPatternTicksLeft() == 0)
+        {
+            armleft.rotation = Quaternion.Euler(0f, 0f, 0f);
+            armright.rotation = Quaternion.Euler(0f, 0f, 0f);
+        }
     }
 
     void OnBeatUpdate()
@@ -94,6 +110,20 @@ public class MonsterView : MonoBehaviour {
     {
         dead = true;
         animator.Play(anim_monsterfadeOut);
+    }
+
+    public void OnAttacked()
+    {
+        UpdateHurtState(!hurtState);
+    }
+
+    void UpdateHurtState(bool state)
+    {
+        hurtState = state;
+        armleft.rotation = Quaternion.Euler(0f, 0f, poses[0][0]);
+        armright.rotation = Quaternion.Euler(0f, 0f, poses[0][0]);
+        transform.localScale = new Vector3(hurtState ? startScale : -startScale, transform.localScale.y, transform.localScale.z);
+        transform.localPosition = hurtState ? Vector3.zero : new Vector3(1.2f, 0f, 0f);
     }
 
     void OnDestroy()

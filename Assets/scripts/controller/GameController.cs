@@ -181,6 +181,7 @@ public class GameController : MonoBehaviour {
     {
         SoundManager.instance.PlaySwordSlash(0);
         player.OnSlashCorrect();
+        monster.OnAttacked();
         if (tickWaiting)
         {
             tickWaiting = false;
@@ -199,7 +200,7 @@ public class GameController : MonoBehaviour {
         // play switching sound
         if (turnPlayer)
         {
-            monster.SetArmRotationActive(false);
+            monster.SetTurnActive(false);
             SoundManager.instance.PlaySwitchEnemy();
             tutorial.ShowGo();
         }
@@ -207,7 +208,7 @@ public class GameController : MonoBehaviour {
         {
             player.OnTurnOver();
             SoundManager.instance.PlaySwitchEnemy();
-            monster.SetArmRotationActive(true);
+            monster.SetTurnActive(true);
             tutorial.ShowSpace();
             if (!failed)
             {
