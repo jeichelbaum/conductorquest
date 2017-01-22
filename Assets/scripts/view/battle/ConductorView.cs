@@ -13,6 +13,7 @@ public class ConductorView : MonoBehaviour {
 
     bool playFailEffect = true;
     public ParticleSystem failEffect;
+    public ParticleSystem sparkleEffect;
 
 
     public Sprite spriteFail;
@@ -85,5 +86,7 @@ public class ConductorView : MonoBehaviour {
 
         ShowConductorStanding(false);
         nodeIndex = index;
+
+        sparkleEffect.Play();
     }
 }
