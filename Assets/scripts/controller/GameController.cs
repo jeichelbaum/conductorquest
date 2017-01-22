@@ -24,15 +24,12 @@ public class GameController : MonoBehaviour {
     MonsterView monster, monsterOld;
     public BackgroundView background;
 
+    bool musicStarted = false;
+    int countdown = 2;
     public int level = 0;
 
     void Start ()
     {
-        BeatController.instance.OnTickUpdate += OnTickUpdate;
-        BeatController.instance.OnPatternTick += OnPatternTick;
-        BeatController.instance.OnBarUpdate += OnBarUpdate;
-        BeatController.instance.OnLastPatternTick += OnLastPatternTick;
-
         SpawnNewMonster();
         player.HideForIntro();
     }
@@ -57,8 +54,41 @@ public class GameController : MonoBehaviour {
 
     void StartGame()
     {
-        BeatController.instance.StartPlaying();
+        monster.SetTurnActive(false, false);
         player.ShowConductorStanding(true);
+
+        BeatController.instance.StartPlaying();
+        BeatController.instance.OnTickUpdate += GameCountdownOnTick;
+    }
+
+    void GameCountdownOnTick()
+    {
+        if(!musicStarted && BeatController.instance.tick == 0)
+        {
+            SoundManager.instance.PlayMusic();
+            musicStarted = true;
+        }
+
+        if (BeatController.instance.tick == 28)
+        {
+            SoundManager.instance.PlaySwitchEnemy();
+            countdown--;
+        }
+
+        if (countdown <= 0)
+        {
+            AddBeatListeners();
+            BeatController.instance.OnTickUpdate -= GameCountdownOnTick;
+            monster.SetTurnActive(true);
+        }
+    }
+
+    void AddBeatListeners()
+    {
+        BeatController.instance.OnTickUpdate += OnTickUpdate;
+        BeatController.instance.OnPatternTick += OnPatternTick;
+        BeatController.instance.OnBarUpdate += OnBarUpdate;
+        BeatController.instance.OnLastPatternTick += OnLastPatternTick;
     }
 
     void OnTickUpdate()
@@ -226,6 +256,10 @@ public class GameController : MonoBehaviour {
             else
             {
                 health--;
+                if (health <= 0)
+                {
+                    OnGameOver();
+                }
                 monster.SetTurnActive(true);
             }
 
@@ -234,5 +268,11 @@ public class GameController : MonoBehaviour {
 
         // reset values
         failed = tickNextIgnore = tickWaiting = false;
+    }
+
+    void OnGameOver()
+    {
+        return;
+        Application.LoadLevel(Application.loadedLevel);
     }
 }

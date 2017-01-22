@@ -66,10 +66,10 @@ public class MonsterView : MonoBehaviour {
         }
     }
 
-    public void SetTurnActive(bool val)
+    public void SetTurnActive(bool val, bool update = true)
     {
         turnMonster = val;
-        UpdateHurtState(true);
+        if(update) UpdateHurtState(update);
     }
 
 
