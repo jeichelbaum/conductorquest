@@ -68,6 +68,7 @@ public class MonsterView : MonoBehaviour {
 
     public void SetTurnActive(bool val, bool update = true)
     {
+        if (dead) return;
         turnMonster = val;
         if(update) UpdateHurtState(update);
     }
@@ -76,7 +77,7 @@ public class MonsterView : MonoBehaviour {
     int lastPose = -1;
     void OnPatternTick()
     {
-        if (!turnMonster) return;
+        if (!turnMonster || dead) return;
 
         int pose = lastPose;
         while (pose == lastPose)

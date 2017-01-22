@@ -16,7 +16,7 @@ public class GameController : MonoBehaviour {
 
     public TutorialView tutorial;
 
-    int health = 1;
+    int health = 3;
     public HealthbarView healthbar;
 
     public ConductorView player;
