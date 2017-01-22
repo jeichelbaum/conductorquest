@@ -8,6 +8,8 @@ public class HeartView : MonoBehaviour {
     public static string anim_idle_dead = "heart_idle_dead";
     public static string anim_bounce = "heart_bounce";
 
+    public ParticleSystem destroyEffect;
+
     Animator animator;
     bool alive = true;
 
@@ -26,8 +28,16 @@ public class HeartView : MonoBehaviour {
 
     public void SetAlive(bool val)
     {
+        if (val)
+        {
+            animator.Play(anim_idle);
+        }
+        if (!val && alive != val)
+        {
+            animator.Play(anim_idle_dead);
+            destroyEffect.Play();
+        }
+
         alive = val;
-        if (alive) animator.Play(anim_idle);
-        if (!alive) animator.Play(anim_idle_dead);
     }
 }
