@@ -11,7 +11,6 @@ public class HealthbarView : MonoBehaviour {
 
     public void SetHealth(int health)
     {
-        Debug.Log(health);
         heart1.SetAlive(health >= 1);
         heart2.SetAlive(health >= 2);
         heart3.SetAlive(health >= 3);
