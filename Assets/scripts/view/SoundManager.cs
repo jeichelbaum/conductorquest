@@ -13,6 +13,8 @@ public class SoundManager : MonoBehaviour {
     public AudioClip[] sword_clash;
     public AudioClip slash_fail;
 
+    public AudioClip gameover;
+
     public AudioSource musicChannel;
     List<AudioSource> channels = new List<AudioSource>();
 
@@ -89,5 +91,10 @@ public class SoundManager : MonoBehaviour {
     public void PlaySlashFail()
     {
         PlayClip(slash_fail);
+    }
+
+    public void PlayGameOver()
+    {
+        PlayClip(gameover);
     }
 }

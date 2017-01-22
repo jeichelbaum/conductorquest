@@ -29,8 +29,11 @@ public class GameController : MonoBehaviour {
     int countdown = 2;
     public int level = 0;
 
-    float t_restart = 0f;
+    float numSlashes = 0f;
+    float totalDelay = 0f;
+    
     bool waitForRestart = false;
+    float t_restart = 0f;
 
     void Start ()
     {
@@ -238,6 +241,11 @@ public class GameController : MonoBehaviour {
         {
             tickNextIgnore = true;
         }
+
+        numSlashes++;
+        var tickDistance = BeatController.instance.getDistanceClosestTick();
+        tickDistance = tickDistance < t_hitThreshold * 0.1f ? 0f : tickDistance;
+        totalDelay += tickDistance;
     }
 
     void OnTurnEnded()
@@ -285,22 +293,37 @@ public class GameController : MonoBehaviour {
         SoundManager.instance.EndMusic();
         BeatController.instance.StopPlaying();
         player.OnSlashFail();
+        SoundManager.instance.PlayGameOver();
         tutorial.Hide();
 
-        endscreen.ShowGameOver(2, 50);
+        var accuracy = numSlashes > 0 ? totalDelay / numSlashes : -1f;
+        endscreen.ShowGameOver(level, accuracy);
 
         waitForRestart = true;
-        t_restart = 5f;
+        t_restart = 2f;
     }
 
     void UpdateRestart()
     {
         if (!waitForRestart) return;
-
         t_restart -= Time.deltaTime;
-        if(t_restart <= 0f)
+
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            Application.LoadLevel(Application.loadedLevel);
+            TryRestart();
         }
+    }
+
+    void TryRestart()
+    {
+        if (!waitForRestart) return;
+        if(t_restart > 0f)
+        {
+            t_restart = 0f;
+            endscreen.SkipResultAnimation();
+            return;
+        }
+
+        Application.LoadLevel(Application.loadedLevel);
     }
 }
