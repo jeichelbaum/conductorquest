@@ -6,7 +6,7 @@ public class GameController : MonoBehaviour {
     
     public float t_hitThreshold = 0.4f;
 
-    float t_introCountdown = 1f;
+    float t_introCountdown = 4.92f;
 
     bool turnPlayer = false;
     bool failed = false;
@@ -32,6 +32,9 @@ public class GameController : MonoBehaviour {
         BeatController.instance.OnPatternTick += OnPatternTick;
         BeatController.instance.OnBarUpdate += OnBarUpdate;
         BeatController.instance.OnLastPatternTick += OnLastPatternTick;
+
+        SpawnNewMonster();
+        player.HideForIntro();
     }
 	
 	void Update ()
@@ -55,7 +58,7 @@ public class GameController : MonoBehaviour {
     void StartGame()
     {
         BeatController.instance.StartPlaying();
-        SpawnNewMonster();
+        player.ShowConductorStanding(true);
     }
 
     void OnTickUpdate()

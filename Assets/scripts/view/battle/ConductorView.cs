@@ -61,13 +61,21 @@ public class ConductorView : MonoBehaviour {
         playFailEffect = false;
     }
 
-    void ShowConductorStanding(bool val)
+    public void HideForIntro()
+    {
+        for (var i = 0; i < transform.childCount; i++)
+        {
+            var child = transform.GetChild(i).gameObject;
+            child.SetActive(false);
+        }
+    }
+
+    public void ShowConductorStanding(bool val)
     {
         for (var i = 0; i < transform.childCount; i++)
         {
             var child = transform.GetChild(i).gameObject;
             child.SetActive(val);
-
         }
 
         pose.gameObject.SetActive(!val);
