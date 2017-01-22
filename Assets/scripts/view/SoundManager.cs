@@ -12,6 +12,7 @@ public class SoundManager : MonoBehaviour {
     public AudioClip[] monster_sound;
     public AudioClip sword_draw;
     public AudioClip[] sword_slash;
+    public AudioClip[] sword_clash;
     public AudioClip slash_fail;
 
     List<AudioSource> channels = new List<AudioSource>();
@@ -55,6 +56,11 @@ public class SoundManager : MonoBehaviour {
         PlayClip(switch_enemy);
     }
 
+    public void PlayRandomMonsterSound()
+    {
+        PlayMonsterSound(Random.Range(0, monster_sound.Length));
+    }
+
     public void PlayMonsterSound(int index)
     {
         PlayClip(monster_sound[index]);
@@ -65,9 +71,15 @@ public class SoundManager : MonoBehaviour {
         PlayClip(sword_draw);
     }
 
+    public void PlayRandomSwordSlash()
+    {
+        PlaySwordSlash(Random.Range(0, sword_slash.Length));
+    }
+
     public void PlaySwordSlash(int index)
     {
-        PlayClip(sword_slash[index]);
+        PlayClip(sword_slash[index], 0.8f);
+        PlayClip(sword_clash[index]);
     }
     
     public void PlaySlashFail()

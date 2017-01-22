@@ -167,7 +167,7 @@ public class GameController : MonoBehaviour {
 
     void OnMonsterTick()
     {
-        SoundManager.instance.PlaySwordSlash(0);
+        SoundManager.instance.PlayRandomMonsterSound();
     }
 
     void OnMiss()
@@ -179,7 +179,6 @@ public class GameController : MonoBehaviour {
 
     void OnSlashFail()
     {
-        SoundManager.instance.PlaySlashFail();
         player.OnSlashFail();
         failed = true;
         tickWaiting = tickNextIgnore = false;
@@ -187,7 +186,7 @@ public class GameController : MonoBehaviour {
 
     void OnSlashCorrect()
     {
-        SoundManager.instance.PlaySwordSlash(0);
+        SoundManager.instance.PlayRandomSwordSlash();
         player.OnSlashCorrect();
         monster.OnAttacked();
         if (tickWaiting)
@@ -209,7 +208,7 @@ public class GameController : MonoBehaviour {
         if (turnPlayer)
         {
             monster.SetTurnActive(false);
-            SoundManager.instance.PlaySwitchEnemy();
+            SoundManager.instance.PlaySwordDraw();
             tutorial.ShowGo();
         }
         else

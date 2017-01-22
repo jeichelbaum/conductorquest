@@ -56,7 +56,7 @@ public class ConductorView : MonoBehaviour {
         pose.transform.position = poses.GetNode(nodeIndex).pose.transform.position;
         pose.sprite = spriteFail;
 
-
+        SoundManager.instance.PlaySlashFail();
         failEffect.Play();
         playFailEffect = false;
     }
