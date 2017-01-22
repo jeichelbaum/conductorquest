@@ -7,6 +7,7 @@ public class MonsterView : MonoBehaviour {
     string anim_monsterBounce = "monster_bounce";
     string anim_monsterFadeIn = "monster_fadein";
     string anim_monsterfadeOut = "monster_fadeout";
+    string anim_monsterdeath = "monster_death";
 
     BodyData body;
     Transform armleft;
@@ -117,13 +118,18 @@ public class MonsterView : MonoBehaviour {
         UpdateHurtState(!hurtState);
     }
 
+    public void OnDeath()
+    {
+        animator.Play(anim_monsterdeath);
+    }
+
     void UpdateHurtState(bool state)
     {
         hurtState = state;
         armleft.rotation = Quaternion.Euler(0f, 0f, poses[0][0]);
         armright.rotation = Quaternion.Euler(0f, 0f, poses[0][0]);
         transform.localScale = new Vector3(hurtState ? startScale : -startScale, transform.localScale.y, transform.localScale.z);
-        transform.localPosition = hurtState ? Vector3.zero : new Vector3(1.2f, 0f, 0f);
+        transform.localPosition = hurtState ? Vector3.zero : new Vector3(3f, 0f, 0f);
     }
 
     void OnDestroy()

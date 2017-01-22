@@ -31,6 +31,7 @@ public class GameController : MonoBehaviour {
         BeatController.instance.OnTickUpdate += OnTickUpdate;
         BeatController.instance.OnPatternTick += OnPatternTick;
         BeatController.instance.OnBarUpdate += OnBarUpdate;
+        BeatController.instance.OnLastPatternTick += OnLastPatternTick;
     }
 	
 	void Update ()
@@ -85,6 +86,13 @@ public class GameController : MonoBehaviour {
         }
     }
 
+    void OnLastPatternTick()
+    {
+        if(turnPlayer && !failed)
+        {
+            monster.OnDeath();
+        }
+    }
 
     void OnBarUpdate()
     {
@@ -150,7 +158,7 @@ public class GameController : MonoBehaviour {
         BeatController.instance.SelectPatterRandom();
     }
 
-    void OnMonsterDead()
+    void OnLevelWon()
     {
         SpawnNewMonster();
         level++;
@@ -208,16 +216,15 @@ public class GameController : MonoBehaviour {
         {
             player.OnTurnOver();
             SoundManager.instance.PlaySwitchEnemy();
-            monster.SetTurnActive(true);
             tutorial.ShowSpace();
             if (!failed)
             {
-                OnMonsterDead();
-                //health = 3;
+                OnLevelWon();
             }
             else
             {
                 health--;
+                monster.SetTurnActive(true);
             }
 
             healthbar.SetHealth(health);

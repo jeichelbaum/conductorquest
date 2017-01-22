@@ -16,6 +16,10 @@ public class BeatController : MonoBehaviour
     public delegate void BarUpdate();
     public event BarUpdate OnBarUpdate;
 
+
+    public delegate void LastPatternTick();
+    public event LastPatternTick OnLastPatternTick;
+
     public float bpm = 120f;
     float beatInterval = 0f;
     float tickInterval = 0f;
@@ -91,6 +95,11 @@ public class BeatController : MonoBehaviour
             if (OnPatternTick != null)
             {
                 OnPatternTick();
+            }
+
+            if(tick == pattern[pattern.Count-1] && OnLastPatternTick != null)
+            {
+                OnLastPatternTick();
             }
         }
     }
