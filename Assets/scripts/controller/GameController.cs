@@ -32,6 +32,7 @@ public class GameController : MonoBehaviour {
     {
         SpawnNewMonster();
         player.HideForIntro();
+        tutorial.Hide();
     }
 	
 	void Update ()
@@ -56,6 +57,7 @@ public class GameController : MonoBehaviour {
     {
         monster.SetTurnActive(false, false);
         player.ShowConductorStanding(true);
+        tutorial.ShowInstructions();
 
         BeatController.instance.StartPlaying();
         BeatController.instance.OnTickUpdate += GameCountdownOnTick;
@@ -80,6 +82,7 @@ public class GameController : MonoBehaviour {
             AddBeatListeners();
             BeatController.instance.OnTickUpdate -= GameCountdownOnTick;
             monster.SetTurnActive(true);
+            tutorial.ShowSpace();
         }
     }
 
