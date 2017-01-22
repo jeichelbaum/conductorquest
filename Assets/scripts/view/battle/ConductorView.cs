@@ -80,9 +80,13 @@ public class ConductorView : MonoBehaviour {
             poses.GetNode(index).pose.transform.position
         );
 
+
         // display node positions
-        pose.transform.position = poses.GetNode(index).pose.transform.position;
-        pose.sprite = spritePoses[Random.Range(0, spritePoses.Count)];
+        var nodepose = poses.GetNode(index).pose;
+        pose.transform.position = nodepose.transform.position;
+        pose.transform.localScale = nodepose.transform.localScale;
+        pose.transform.localRotation = nodepose.transform.localRotation;
+        pose.sprite = nodepose.GetComponent<SpriteRenderer>().sprite;
 
         ShowConductorStanding(false);
         nodeIndex = index;
