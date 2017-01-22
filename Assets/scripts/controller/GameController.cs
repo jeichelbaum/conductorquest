@@ -158,6 +158,7 @@ public class GameController : MonoBehaviour {
     {
         failed = true;
         tickWaiting = tickNextIgnore = false;
+        player.OnSlashFail();
     }
 
     void OnSlashFail()
@@ -195,6 +196,7 @@ public class GameController : MonoBehaviour {
         }
         else
         {
+            player.OnTurnOver();
             SoundManager.instance.PlaySwitchEnemy();
             monster.SetArmRotationActive(true);
             if (!failed)

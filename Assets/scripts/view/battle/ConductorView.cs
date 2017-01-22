@@ -9,10 +9,19 @@ public class ConductorView : MonoBehaviour {
     string anim_conductorBounce = "conductor_utzn";
 
     public PosesNavMesh poses;
+    SpriteRenderer pose;
+
+    bool playFailEffect = true;
+    public ParticleSystem failEffect;
+
+
+    public Sprite spriteFail;
+    public List<Sprite> spritePoses;
 
     int nodeIndex = 7;
 
 	void Start () {
+        pose = transform.FindChild("pose").GetComponent<SpriteRenderer>();
 
         animator = GetComponent<Animator>();
         BeatController.instance.OnBeatUpdate += OnBeatUpdate;
@@ -23,86 +32,58 @@ public class ConductorView : MonoBehaviour {
         animator.Play(anim_conductorBounce);
     }
 
+    public void OnTurnOver()
+    {
+        ShowConductorStanding(true);
+        nodeIndex = 7;
+        playFailEffect = true;
+    }
+
     public void OnSlashCorrect()
     {
-        // get possible moves and shuffle
         var choices = poses.GetPossibleNodes(nodeIndex);
-
-        for (int i = 0; i < choices.Length; i++)
-        {
-            var temp = choices[i];
-            int randomIndex = Random.Range(i, choices.Length);
-            choices[i] = choices[randomIndex];
-            choices[randomIndex] = temp;
-        }
-
-        var ticksLeft = BeatController.instance.getPatternTicksLeft();
-        var shortestFinisher = poses.GetDistanceToFinisher(nodeIndex, ticksLeft);
-        
-        
-        foreach (var c in choices)
-        {
-            if(ticksLeft == 0)
-            {
-                SlashToNode(8);
-                break;
-            }
-            else if(ticksLeft <= shortestFinisher)
-            {
-                // follow the correct path to finishing
-                if (poses.GetDistanceToFinisher(c, ticksLeft) == ticksLeft -1)
-                {
-                    SlashToNode(c);
-                    break;
-                }
-            }
-            else
-            {
-                // go to whatever node as long as its not number 2
-                if (poses.GetDistanceToFinisher(c, ticksLeft) != -1 && c != 2)
-                {
-                    SlashToNode(c);
-                    break;
-                }
-            }
-        }
-
-
-
-
-
-
-
-
-
+        SlashToNode(choices[Random.Range(0, choices.Length)]);
+        playFailEffect = true;
     }
 
     public void OnSlashFail()
     {
+        if (!playFailEffect) return;
 
+        ShowConductorStanding(false);
+        nodeIndex = 7 + (nodeIndex - 1) % 3;
+        pose.transform.position = poses.GetNode(nodeIndex).pose.transform.position;
+        pose.sprite = spriteFail;
+
+
+        failEffect.Play();
+        playFailEffect = false;
     }
 
     void ShowConductorStanding(bool val)
     {
         for (var i = 0; i < transform.childCount; i++)
         {
-            transform.GetChild(i).gameObject.SetActive(val);
+            var child = transform.GetChild(i).gameObject;
+            child.SetActive(val);
+
         }
+
+        pose.gameObject.SetActive(!val);
     }
 
     public void SlashToNode(int index)
     {
-        Camera.main.GetComponent<ScreenEffects>().ShowSlash(poses.GetNode(nodeIndex).pose.transform.position, poses.GetNode(index).pose.transform.position);
-
+        Camera.main.GetComponent<ScreenEffects>().ShowSlash(
+            poses.GetNode(nodeIndex).pose.transform.position, 
+            poses.GetNode(index).pose.transform.position
+        );
 
         // display node positions
-        poses.GetNode(nodeIndex).pose.SetActive(false);
-        poses.GetNode(index).pose.SetActive(true);
+        pose.transform.position = poses.GetNode(index).pose.transform.position;
+        pose.sprite = spritePoses[Random.Range(0, spritePoses.Count)];
 
         ShowConductorStanding(false);
-
-
-
-        nodeIndex = index != 8 ? index : 7;
+        nodeIndex = index;
     }
 }
