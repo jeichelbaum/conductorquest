@@ -14,10 +14,17 @@ public class GameController : MonoBehaviour {
     bool tickWaiting = false;
     float t_waiting = 0f;
 
+    public TutorialView tutorial;
+
+    int health = 3;
+    public HealthbarView healthbar;
+
     public ConductorView player;
     public Transform spawn_monster;
     MonsterView monster, monsterOld;
     public BackgroundView background;
+
+    public int level = 0;
 
     void Start ()
     {
@@ -146,6 +153,7 @@ public class GameController : MonoBehaviour {
     void OnMonsterDead()
     {
         SpawnNewMonster();
+        level++;
     }
     
 
@@ -193,16 +201,25 @@ public class GameController : MonoBehaviour {
         {
             monster.SetArmRotationActive(false);
             SoundManager.instance.PlaySwitchEnemy();
+            tutorial.ShowGo();
         }
         else
         {
             player.OnTurnOver();
             SoundManager.instance.PlaySwitchEnemy();
             monster.SetArmRotationActive(true);
+            tutorial.ShowSpace();
             if (!failed)
             {
                 OnMonsterDead();
+                //health = 3;
             }
+            else
+            {
+                health--;
+            }
+
+            healthbar.SetHealth(health);
         }
 
         // reset values
