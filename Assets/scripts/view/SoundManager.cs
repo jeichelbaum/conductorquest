@@ -6,8 +6,6 @@ public class SoundManager : MonoBehaviour {
 
     public static SoundManager instance;
 
-    public AudioClip music;
-
     public AudioClip switch_enemy;
     public AudioClip[] monster_sound;
     public AudioClip sword_draw;
@@ -15,6 +13,7 @@ public class SoundManager : MonoBehaviour {
     public AudioClip[] sword_clash;
     public AudioClip slash_fail;
 
+    public AudioSource musicChannel;
     List<AudioSource> channels = new List<AudioSource>();
 
     void Awake()
@@ -48,7 +47,12 @@ public class SoundManager : MonoBehaviour {
 
     public void PlayMusic()
     {
-        PlayClip(music, 0.3f);
+        musicChannel.Play();
+    }
+
+    public void EndMusic()
+    {
+        musicChannel.Stop();
     }
 
     public void PlaySwitchEnemy()

@@ -16,17 +16,21 @@ public class GameController : MonoBehaviour {
 
     public TutorialView tutorial;
 
-    int health = 3;
+    int health = 1;
     public HealthbarView healthbar;
 
     public ConductorView player;
     public Transform spawn_monster;
     MonsterView monster, monsterOld;
     public BackgroundView background;
+    public EndScreenView endscreen;
 
     bool musicStarted = false;
     int countdown = 2;
     public int level = 0;
+
+    float t_restart = 0f;
+    bool waitForRestart = false;
 
     void Start ()
     {
@@ -39,6 +43,7 @@ public class GameController : MonoBehaviour {
     {
         UpdateCountdown();
         UpdateInput();
+        UpdateRestart();
 	}
 
     void UpdateCountdown()
@@ -275,7 +280,27 @@ public class GameController : MonoBehaviour {
 
     void OnGameOver()
     {
-        return;
-        Application.LoadLevel(Application.loadedLevel);
+        healthbar.gameObject.SetActive(false);
+
+        SoundManager.instance.EndMusic();
+        BeatController.instance.StopPlaying();
+        player.OnSlashFail();
+        tutorial.Hide();
+
+        endscreen.ShowGameOver(2, 50);
+
+        waitForRestart = true;
+        t_restart = 5f;
+    }
+
+    void UpdateRestart()
+    {
+        if (!waitForRestart) return;
+
+        t_restart -= Time.deltaTime;
+        if(t_restart <= 0f)
+        {
+            Application.LoadLevel(Application.loadedLevel);
+        }
     }
 }
