@@ -21,7 +21,7 @@ public class BeatController : MonoBehaviour
     public event LastPatternTick OnLastPatternTick;
 
     public float bpm = 120f;
-    float beatInterval = 0f;
+    public float beatInterval = 0f;
     float tickInterval = 0f;
 
     public bool selectRandomPattern = false;
@@ -220,5 +220,20 @@ public class BeatController : MonoBehaviour
         }
 
         return pattern.Count - 1 - lastTick;
+    }
+
+    public float getBarTime()
+    {
+        return (float)tick * tickInterval + time;
+    }
+
+    public float getRoundedTick()
+    {
+        return Mathf.Round((tick * tickInterval + time) / tickInterval);
+    }
+
+    public float getRoundedBeat()
+    {
+        return Mathf.Round((tick * tickInterval + time) / beatInterval);
     }
 }

@@ -21,7 +21,7 @@ public class GameController : MonoBehaviour {
 
     public ConductorView player;
     public Transform spawn_monster;
-    MonsterView monster, monsterOld;
+    MonsterView monster;
     public BackgroundView background;
     public EndScreenView endscreen;
 
@@ -33,7 +33,7 @@ public class GameController : MonoBehaviour {
     float totalDelay = 0f;
     
     bool waitForRestart = false;
-    float t_restart = 0f;
+    float t_restart = 0;
 
     void Start ()
     {
@@ -41,8 +41,16 @@ public class GameController : MonoBehaviour {
         player.HideForIntro();
         tutorial.Hide();
     }
-	
-	void Update ()
+
+
+
+    void FixedUpdate()
+    {
+        //Screen.SetResolution(550, 1280, true);
+    }
+
+
+    void Update ()
     {
         UpdateCountdown();
         UpdateInput();
@@ -141,7 +149,7 @@ public class GameController : MonoBehaviour {
     void OnBarUpdate()
     {
         // start music again after 8 bars
-        if (BeatController.instance.bar % 8 == 0)
+        if (BeatController.instance.bar % 4 == 0)
         {
             SoundManager.instance.PlayMusic();
         }
@@ -156,7 +164,7 @@ public class GameController : MonoBehaviour {
         if (!turnPlayer) return;
 
         // check if input came at the right time
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
         {
             var dist = BeatController.instance.getDistanceClosestTick();
             if(dist < t_hitThreshold)
@@ -188,7 +196,6 @@ public class GameController : MonoBehaviour {
         {
             background.PlaySwitchAnimation();
             monster.PlayAnimationFadeOut();
-            monsterOld = monster;
         }
 
         // fade new monster
@@ -308,7 +315,7 @@ public class GameController : MonoBehaviour {
         if (!waitForRestart) return;
         t_restart -= Time.deltaTime;
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
         {
             TryRestart();
         }

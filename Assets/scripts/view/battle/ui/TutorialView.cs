@@ -15,13 +15,12 @@ public class TutorialView : MonoBehaviour {
     public static string anim_press_bounce = "tutorial_space_press";
 
 
-    Animator animator;
+    public Animator animator;
     bool showBounces = true;
     bool instructions = false;
 
     void Start ()
     {
-        animator = GetComponent<Animator>();
 
         BeatController.instance.OnPatternTick += OnPatternTick;
 	}

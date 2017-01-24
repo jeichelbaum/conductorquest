@@ -25,7 +25,6 @@ public class BackgroundView : MonoBehaviour {
     {
         if(switching && t_switching + 0.1f < Time.time)
         {
-            Debug.Log("check switch");
             if(animator.GetCurrentAnimatorStateInfo(0).IsName(anim_idle))
             {
                 bg_left.sprite = bg_right.sprite;

@@ -8,10 +8,52 @@ public class MonsterConfigs : MonoBehaviour {
 
     public GameObject[] monsterPrefabs;
 
-    public Sprite[] monsterHeads;
-    public Sprite[] monsterArmsRight;
-    public Sprite[] monsterArmsLeft;
-    public Sprite[] monsterLegs;
+    [HideInInspector]
+    public List<Sprite> monsterHeads;
+    [HideInInspector]
+    public List<Sprite> monsterArmsLeft;
+    [HideInInspector]
+    public List<Sprite> monsterArmsRight;
+    [HideInInspector]
+    public List<Sprite> monsterLegs;
+
+    public void UpdatePrefabs()
+    {
+        // clean init spritearrays
+        monsterHeads = new List<Sprite>();
+        monsterArmsLeft = new List<Sprite>();
+        monsterArmsRight = new List<Sprite>();
+        monsterLegs = new List<Sprite>();
+
+        foreach (var prefab in monsterPrefabs)
+        {
+            // instantiate monster prefab
+            var config = ((GameObject)GameObject.Instantiate(prefab)).GetComponent<BodyData>();
+            config.gameObject.SetActive(false);
+
+            // extract all sprites
+            AddSpritesToList(config, config.GetBoneHead(), monsterHeads);
+            AddSpritesToList(config, config.GetBoneArmLeft(), monsterArmsLeft);
+            AddSpritesToList(config, config.GetBoneArmRight(), monsterArmsRight);
+            AddSpritesToList(config, config.GetBoneLegs(), monsterLegs);
+            
+            DestroyImmediate(config.gameObject);
+        }
+
+        Debug.Log("Updated Monster Prefabs, numHeads:" + monsterHeads.Count.ToString() +
+            ", numArmL: " + monsterArmsLeft.Count.ToString() +
+            ", numArmR: " + monsterArmsRight.Count.ToString() +
+            ", numLegs: " + monsterLegs.Count.ToString()   
+        );
+    }
+
+    void AddSpritesToList(BodyData config, Transform bone, List<Sprite> sprites)
+    {
+        foreach (var child in config.GetBoneSprites(bone))
+        {
+            sprites.Add(child.GetComponent<SpriteRenderer>().sprite);
+        }
+    }
 
     void Awake()
     {
@@ -25,18 +67,18 @@ public class MonsterConfigs : MonoBehaviour {
 
     public Sprite GetRandomHead()
     {
-        return monsterHeads[Random.Range(0, monsterHeads.Length)];
+        return monsterHeads[Random.Range(0, monsterHeads.Count)];
     }
     public Sprite GetRandomArmRight()
     {
-        return monsterArmsRight[Random.Range(0, monsterArmsRight.Length)];
+        return monsterArmsRight[Random.Range(0, monsterArmsRight.Count)];
     }
     public Sprite GetRandomArmLeft()
     {
-        return monsterArmsLeft[Random.Range(0, monsterArmsLeft.Length)];
+        return monsterArmsLeft[Random.Range(0, monsterArmsLeft.Count)];
     }
     public Sprite GetRandomLegs()
     {
-        return monsterLegs[Random.Range(0, monsterLegs.Length)];
+        return monsterLegs[Random.Range(0, monsterLegs.Count)];
     }
 }
