@@ -55,6 +55,7 @@ public class SoundManager : MonoBehaviour {
     public void EndMusic()
     {
         musicChannel.Stop();
+        BeatController.instance.StopPlaying();
     }
 
     public void PlaySwitchEnemy()

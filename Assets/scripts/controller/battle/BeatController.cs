@@ -35,7 +35,14 @@ public class BeatController : MonoBehaviour
     [HideInInspector]
     public int bar = -1;
     [HideInInspector]
-    public bool isPlaying = false;
+
+    public bool isPlaying
+    {
+        get
+        {
+            return soundManager.musicChannel.isPlaying;
+        }
+    }
 
     // only 4ths
     List<int> r1_2 = new List<int>(new int[] { 0, 4, 8, 16, 20, 24 });
@@ -175,17 +182,12 @@ public class BeatController : MonoBehaviour
             OnBarUpdate();
         }
     }
-
-    public void StartPlaying()
-    {
-        isPlaying = true;
-    }
+    
 
     public void StopPlaying()
     {
         time = 0f;
         tick = bar = beat = -1;
-        isPlaying = false;
     }
 
     public void SelectPattern(int index)
