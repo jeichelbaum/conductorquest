@@ -82,7 +82,7 @@ public class GameController : MonoBehaviour {
         SpawnNewMonster();
         player.HideForIntro();
         tutorial.Hide();
-        healthbar.Hide(true);
+        healthbar.gameObject.SetActive(false);
     }
 
     void UpdateStateStart()
@@ -119,7 +119,7 @@ public class GameController : MonoBehaviour {
     void EnterStateGame()
     {
         state = STATE_GAME;
-        healthbar.Hide(false);
+        healthbar.gameObject.SetActive(true);
         StartGame();
     }
     

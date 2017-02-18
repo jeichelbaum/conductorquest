@@ -15,12 +15,5 @@ public class HealthbarView : MonoBehaviour {
         heart2.SetAlive(health >= 2);
         heart3.SetAlive(health >= 3);
     }
-
-    public void Hide(bool val)
-    {
-        heart1.gameObject.SetActive(!val);
-        heart2.gameObject.SetActive(!val);
-        heart3.gameObject.SetActive(!val);
-        GetComponent<SpriteRenderer>().enabled = !val;
-    }
+    
 }
