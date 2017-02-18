@@ -204,19 +204,24 @@ public class BeatController : MonoBehaviour
 
     public float getDistanceClosestTick()
     {
+        var closest = getClosestTick();
+        return Mathf.Abs(closest * tickInterval - (tick * tickInterval + time));
+    }
+
+    public int getClosestTick()
+    {
         var closest = 0;
         var dist = 100;
-        foreach(var t in pattern)
+        foreach (var t in pattern)
         {
             var newDist = Mathf.Abs(tick - t);
-            if(newDist < dist)
+            if (newDist < dist)
             {
                 closest = t;
                 dist = newDist;
             }
         }
-
-        return Mathf.Abs(closest * tickInterval - (tick * tickInterval + time));
+        return closest;
     }
 
     public int getPatternTicksLeft()

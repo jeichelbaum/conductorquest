@@ -81,7 +81,6 @@ public class GameController : MonoBehaviour {
     {
         state = STATE_START;
         player.HideForIntro();
-        tutorial.Hide();
         healthbar.gameObject.SetActive(false);
     }
 
@@ -130,7 +129,6 @@ public class GameController : MonoBehaviour {
     {
         monster.SetTurnActive(false, false);
         player.ShowConductorStanding(true);
-        tutorial.ShowInstructions();
 
         AddGameBeatListeners();
         SoundManager.instance.PlayMusic();
@@ -266,6 +264,11 @@ public class GameController : MonoBehaviour {
 
     void OnMiss()
     {
+        if(state == STATE_TUTORIAL)
+        {
+            tutorial.OnPlayerMiss();
+        }
+
         if(!failed)
         {
             health--;
@@ -292,6 +295,11 @@ public class GameController : MonoBehaviour {
 
     void OnSlashCorrect()
     {
+        if (state == STATE_TUTORIAL)
+        {
+            tutorial.OnPlayerMiss();
+        }
+
         SoundManager.instance.PlayRandomSwordSlash();
         player.OnSlashCorrect();
         monster.OnAttacked();
@@ -314,19 +322,21 @@ public class GameController : MonoBehaviour {
     {
         // switch turn
         turnPlayer = !turnPlayer;
+        if(state == STATE_TUTORIAL)
+        {
+            tutorial.SetPlayerTurn(turnPlayer);
+        }
 
         // play switching sound
         if (turnPlayer)
         {
             monster.SetTurnActive(false);
             SoundManager.instance.PlaySwordDraw();
-            tutorial.ShowGo();
         }
         else
         {
             player.OnTurnOver();
             SoundManager.instance.PlaySwitchEnemy();
-            tutorial.ShowSpace();
             if (!failed)
             {
                 OnLevelWon();
@@ -353,7 +363,6 @@ public class GameController : MonoBehaviour {
         BeatController.instance.StopPlaying();
         player.OnSlashFail();
         SoundManager.instance.PlayGameOver();
-        tutorial.Hide();
 
         var accuracy = numSlashes > 0 ? totalDelay / numSlashes : -1f;
         endscreen.ShowGameOver(level, accuracy);
