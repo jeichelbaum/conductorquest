@@ -6,28 +6,13 @@
 		_MainTex("Texture", 2D) = "white" {}
 	
 		_Color1("Color", Color) = (1.0, 1.0, 1.0, 1.0)
-		_Range1("range", Range(0,1)) = 0.0
-
 		_Color2("Color", Color) = (1.0, 1.0, 1.0, 1.0)
-		_Range2("range", Range(0,1)) = 0.0
-
 		_Color3("Color", Color) = (1.0, 1.0, 1.0, 1.0)
-		_Range3("range", Range(0,1)) = 0.0
-
 		_Color4("Color", Color) = (1.0, 1.0, 1.0, 1.0)
-		_Range4("range", Range(0,1)) = 0.0
-
 		_Color5("Color", Color) = (1.0, 1.0, 1.0, 1.0)
-		_Range5("range", Range(0,1)) = 0.0
-
 		_Color6("Color", Color) = (1.0, 1.0, 1.0, 1.0)
-		_Range6("range", Range(0,1)) = 0.0
-
 		_Color7("Color", Color) = (1.0, 1.0, 1.0, 1.0)
-		_Range7("range", Range(0,1)) = 0.0
-
 		_Color8("Color", Color) = (1.0, 1.0, 1.0, 1.0)
-		_Range8("range", Range(0,1)) = 0.0
 
 	}
 		SubShader
@@ -60,21 +45,13 @@
 	float _Emission;
 
 	float4 _Color1;
-	float _Range1;
 	float4 _Color2;
-	float _Range2;
 	float4 _Color3;
-	float _Range3;
 	float4 _Color4;
-	float _Range4;
 	float4 _Color5;
-	float _Range5;
 	float4 _Color6;
-	float _Range6;
 	float4 _Color7;
-	float _Range7;
 	float4 _Color8;
-	float _Range8;
 
 	v2f vert(appdata v)
 	{
@@ -89,28 +66,28 @@
 
 		fixed4 col = tex2D(_MainTex, i.uv);
 
-	if (col.r < _Range1) {
+	if (col.r < 0.024) {
 		col = _Color1 * float4(_Emission, _Emission, _Emission, col.a);
 	}
-	else if (col.r < _Range2) {
+	else if (col.r < 0.112) {
 		col = _Color2 * float4(_Emission, _Emission, _Emission, col.a);
 	}
-	else if (col.r < _Range3) {
+	else if (col.r < 0.225) {
 		col = _Color3 * float4(_Emission, _Emission, _Emission, col.a);
 	}
-	else if (col.r < _Range4) {
+	else if (col.r < 0.355) {
 		col = _Color4 * float4(_Emission, _Emission, _Emission, col.a);
 	}
-	else if (col.r < _Range5) {
+	else if (col.r < 0.456) {
 		col = _Color5 * float4(_Emission, _Emission, _Emission, col.a);
 	}
-	else if (col.r <= _Range6) {
+	else if (col.r <= 0.509) {
 		col = _Color6 * float4(_Emission, _Emission, _Emission, col.a);
 	}
-	else if (col.r <= _Range7) {
+	else if (col.r <= 0.602) {
 		col = _Color7 * float4(_Emission, _Emission, _Emission, col.a);
 	}
-	else if (col.r <= _Range8) {
+	else if (col.r <= 0.81) {
 		col = _Color8 * float4(_Emission, _Emission, _Emission, col.a);
 	}
 
