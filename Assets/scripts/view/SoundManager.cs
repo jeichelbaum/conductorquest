@@ -17,7 +17,7 @@ public class SoundManager : MonoBehaviour {
 
     public AudioSource musicChannel;
     List<AudioSource> channels = new List<AudioSource>();
-
+ 
     void Awake()
     {
         instance = this;

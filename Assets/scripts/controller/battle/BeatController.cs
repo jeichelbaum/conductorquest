@@ -38,6 +38,7 @@ public class BeatController : MonoBehaviour
     public bool isPlaying = false;
 
     // only 4ths
+    List<int> r1_2 = new List<int>(new int[] { 0, 4, 8, 12, 16, 20, 24 });
     /*List<int> r1_1 = new List<int>(new int[] { 0, 4, 8, 16, 20, 24 });
     List<int> r1_2 = new List<int>(new int[] { 0, 4, 8, 12, 16, 20, 24 });
     List<int> r1_3 = new List<int>(new int[] { 0, 4, 8, 12, 16, 20, 24 });
@@ -69,15 +70,23 @@ public class BeatController : MonoBehaviour
     List<int> r6_4 = new List<int>(new int[] { 0, 2, 19 });*/
 
     int patternIndex = -1;
-    //public List<int>[] patterns;
     public List<List<int>> patterns;
     List<int> pattern;
 
+    SoundManager soundManager;
+    int numBars = 0;
+
     void Awake()
     {
+        soundManager = GetComponent<SoundManager>();
+
         beatInterval = 60f / bpm;
         tickInterval = beatInterval / 4f;
 
+        float musicLength = soundManager.musicChannel.clip.length;
+        numBars = (int)Mathf.Round(musicLength / (4f * beatInterval));
+
+        pattern = r1_2;
         /*patterns = new List<int>[] {
             r1_1, r1_2, r1_3, r1_4, r1_5,
             r2_1, r2_2, r2_3,
@@ -103,9 +112,9 @@ public class BeatController : MonoBehaviour
     void UpdateTime()
     {
         if (!isPlaying) return;
-        time += Time.deltaTime;
-
-        if (time > tickInterval) // TICK
+        int t = (int) Mathf.Floor(soundManager.musicChannel.time / (tickInterval));
+        
+        if (t % 32 > tick || (t % 32 == 0 && tick > 0)) // TICK
         {
             time -= tickInterval;
             tick = (tick + 1) % 32;
@@ -134,6 +143,7 @@ public class BeatController : MonoBehaviour
             OnTickUpdate();
         }
 
+        
         if (pattern.Contains(tick))
         {
             if (OnPatternTick != null)
@@ -158,7 +168,7 @@ public class BeatController : MonoBehaviour
 
     void OnBar()
     {
-        if(OnBarUpdate != null)
+        if (OnBarUpdate != null)
         {
             OnBarUpdate();
         }
@@ -183,8 +193,8 @@ public class BeatController : MonoBehaviour
 
     public void SelectPatterRandom()
     {
-        patternIndex = (patternIndex + 1) % patterns.Count;
-        pattern = patterns[patternIndex];
+        //patternIndex = (patternIndex + 1) % patterns.Count;
+        //pattern = patterns[patternIndex];
     }
 
     public float getDistanceClosestTick()
