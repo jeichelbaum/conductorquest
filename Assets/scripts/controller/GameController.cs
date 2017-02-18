@@ -3,71 +3,128 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameController : MonoBehaviour {
-    
-    public float t_hitThreshold = 0.4f;
 
-    float t_introCountdown = 4.92f;
+    const string STATE_START = "STATE_START";
+    const string STATE_INTRO = "STATE_INTRO";
+    const string STATE_TUTORIAL = "STATE_TUTORIAL";
+    const string STATE_GAME = "STATE_GAME";
+    const string STATE_END = "STATE_END";
+    string state = "";
 
-    bool turnPlayer = false;
-    bool failed = false;
-    bool tickNextIgnore = false;
-    bool tickWaiting = false;
-    float t_waiting = 0f;
-
+    // ------ views controlled by game controller
+    public GameObject startscreen;
+    public IntroView intro;
     public TutorialView tutorial;
-
-    int health = 3;
-    public HealthbarView healthbar;
-
-    public ConductorView player;
-    public Transform spawn_monster;
-    MonsterView monster;
     public BackgroundView background;
     public EndScreenView endscreen;
 
-    bool musicStarted = false;
-    int countdown = 2;
-    public int level = 0;
+    public HealthbarView healthbar;
+    public ConductorView player;
+    public Transform spawn_monster;
+    MonsterView monster;
 
+    // specifies acceptable delay for audio cue triggers
+    public float t_hitThreshold = 0.4f;
+    
+    bool turnPlayer = false;        // toggles on each bar
+    bool failed = false;            // active for a whole bar if failed
+    bool tickNextIgnore = false;    // if input came just before tick
+    bool tickWaiting = false;       // if waiting for input shortly after tick
+    float t_waiting = 0f;           // keeping track of how long 
+
+    // in game stats
+    int health = 3;
+    public int level = 0;
     float numSlashes = 0f;
     float totalDelay = 0f;
     
-    bool waitForRestart = false;
-    float t_restart = 0;
+    // used to skip end screen
+    float t_stateEnd = 0;
 
+    
     void Start ()
     {
-        SpawnNewMonster();
-        player.HideForIntro();
-        tutorial.Hide();
+        EnterStateStart();
     }
 
-
-
-    void FixedUpdate()
+    void Reset()
     {
-        //Screen.SetResolution(550, 1280, true);
+        health = 3;
     }
-
-
-    void Update ()
+    
+    void Update()
     {
-        UpdateCountdown();
-        UpdateInput();
-        UpdateRestart();
-	}
-
-    void UpdateCountdown()
-    {
-        if (t_introCountdown > 0f)
+        switch (state)
         {
-            t_introCountdown -= Time.deltaTime;
-            if (t_introCountdown < 0f)
-            {
-                StartGame();
-            }
+            case STATE_START:
+                UpdateStateStart();
+                break;
+            case STATE_TUTORIAL:
+                UpdateGameInput();
+                break;
+            case STATE_GAME:
+                UpdateGameInput();
+                break;
+            case STATE_END:
+                UpdateStateEnd();
+                break;
+            default:
+                break;
         }
     }
+
+
+    // ------------ 1. Start Screen
+    // - wait for tap
+
+    void EnterStateStart()
+    {
+        state = STATE_START;
+        player.HideForIntro();
+        tutorial.Hide();
+        healthbar.gameObject.SetActive(false);
+    }
+
+    void UpdateStateStart()
+    {
+        if(InputButtonPressed())
+        {
+            startscreen.SetActive(false);
+            EnterStateIntro();
+        }
+    }
+
+
+    // ------------ 2. Intro
+    // - play intro uninterupted
+
+    void EnterStateIntro()
+    {
+        state = STATE_INTRO;
+        SpawnNewMonster();
+        intro.PlayIntro(EnterStateTutorial);
+    }
+    
+    // ------------ 3. Tutorial
+    // - core gameplay, immediate start
+    // - show + update tutorial ui
+
+    void EnterStateTutorial()
+    {
+        state = STATE_TUTORIAL;
+        StartGame();
+    }
+
+    // ------------ 4. game
+    // - 
+
+    void EnterStateGame()
+    {
+        state = STATE_GAME;
+        healthbar.gameObject.SetActive(true);
+        StartGame();
+    }
+    
 
     void StartGame()
     {
@@ -75,39 +132,24 @@ public class GameController : MonoBehaviour {
         player.ShowConductorStanding(true);
         tutorial.ShowInstructions();
 
-        BeatController.instance.StartPlaying();
-        BeatController.instance.OnTickUpdate += GameCountdownOnTick;
+        AddGameBeatListeners();
+        SoundManager.instance.PlayMusic();
     }
 
-    void GameCountdownOnTick()
-    {
-        if(!musicStarted && BeatController.instance.tick == 0)
-        {
-            SoundManager.instance.PlayMusic();
-            musicStarted = true;
-        }
-
-        if (BeatController.instance.tick == 28)
-        {
-            SoundManager.instance.PlaySwitchEnemy();
-            countdown--;
-        }
-
-        if (countdown <= 0)
-        {
-            AddBeatListeners();
-            BeatController.instance.OnTickUpdate -= GameCountdownOnTick;
-            monster.SetTurnActive(true);
-            tutorial.ShowSpace();
-        }
-    }
-
-    void AddBeatListeners()
+    void AddGameBeatListeners()
     {
         BeatController.instance.OnTickUpdate += OnTickUpdate;
         BeatController.instance.OnPatternTick += OnPatternTick;
         BeatController.instance.OnBarUpdate += OnBarUpdate;
         BeatController.instance.OnLastPatternTick += OnLastPatternTick;
+    }
+
+    void RemoveGameBeatListeners()
+    {
+        BeatController.instance.OnTickUpdate -= OnTickUpdate;
+        BeatController.instance.OnPatternTick -= OnPatternTick;
+        BeatController.instance.OnBarUpdate -= OnBarUpdate;
+        BeatController.instance.OnLastPatternTick -= OnLastPatternTick;
     }
 
     void OnTickUpdate()
@@ -157,7 +199,7 @@ public class GameController : MonoBehaviour {
     }
 
 
-    void UpdateInput()
+    void UpdateGameInput()
     {
 
         // only update during player turn
@@ -224,13 +266,25 @@ public class GameController : MonoBehaviour {
 
     void OnMiss()
     {
+        if(!failed)
+        {
+            health--;
+            healthbar.SetHealth(health);
+        }
+
         failed = true;
         tickWaiting = tickNextIgnore = false;
         player.OnSlashFail();
     }
 
     void OnSlashFail()
-    {
+    {   
+        if (!failed)
+        {
+            health--;
+            healthbar.SetHealth(health);
+        }
+
         player.OnSlashFail();
         failed = true;
         tickWaiting = tickNextIgnore = false;
@@ -279,15 +333,12 @@ public class GameController : MonoBehaviour {
             }
             else
             {
-                health--;
                 if (health <= 0)
                 {
                     OnGameOver();
                 }
                 monster.SetTurnActive(true);
             }
-
-            healthbar.SetHealth(health);
         }
 
         // reset values
@@ -306,15 +357,13 @@ public class GameController : MonoBehaviour {
 
         var accuracy = numSlashes > 0 ? totalDelay / numSlashes : -1f;
         endscreen.ShowGameOver(level, accuracy);
-
-        waitForRestart = true;
-        t_restart = 2f;
+        
+        t_stateEnd = 2f;
     }
 
-    void UpdateRestart()
+    void UpdateStateEnd()
     {
-        if (!waitForRestart) return;
-        t_restart -= Time.deltaTime;
+        t_stateEnd -= Time.deltaTime;
 
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
         {
@@ -324,14 +373,23 @@ public class GameController : MonoBehaviour {
 
     void TryRestart()
     {
-        if (!waitForRestart) return;
-        if(t_restart > 0f)
+        if(t_stateEnd > 0f)
         {
-            t_restart = 0f;
+            t_stateEnd = 0f;
             endscreen.SkipResultAnimation();
             return;
         }
 
-        Application.LoadLevel(Application.loadedLevel);
+        // TODO : restart
     }
+
+    bool InputButtonPressed()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
+        {
+            return true;
+        }
+        return false;
+    }
+
 }

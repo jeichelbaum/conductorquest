@@ -15,4 +15,5 @@ public class HealthbarView : MonoBehaviour {
         heart2.SetAlive(health >= 2);
         heart3.SetAlive(health >= 3);
     }
+    
 }

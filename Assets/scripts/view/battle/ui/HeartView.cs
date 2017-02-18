@@ -22,12 +22,13 @@ public class HeartView : MonoBehaviour {
 
     void OnBeatUpdate()
     {
-        if (!alive) return;
+        if (!alive || !transform.parent.gameObject.activeSelf) return;
         animator.Play(anim_bounce);
     }
 
     public void SetAlive(bool val)
     {
+        if (!transform.parent.gameObject.activeSelf) return;
         if (val)
         {
             animator.Play(anim_idle);

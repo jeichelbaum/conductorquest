@@ -20,7 +20,6 @@ public class InputLagVisualizer : MonoBehaviour {
         BeatController.instance.SelectPatterRandom();
         BeatController.instance.OnBeatUpdate += OnBeatUpdate;
         BeatController.instance.OnBarUpdate += OnBarUpdate;
-        BeatController.instance.StartPlaying();
     }
 
     void Update()
