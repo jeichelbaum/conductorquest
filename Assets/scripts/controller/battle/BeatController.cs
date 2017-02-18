@@ -38,7 +38,7 @@ public class BeatController : MonoBehaviour
     public bool isPlaying = false;
 
     // only 4ths
-    List<int> r1_2 = new List<int>(new int[] { 0, 4, 8, 12, 16, 20, 24 });
+    List<int> r1_2 = new List<int>(new int[] { 0, 4, 8, 16, 20, 24 });
     /*List<int> r1_1 = new List<int>(new int[] { 0, 4, 8, 16, 20, 24 });
     List<int> r1_2 = new List<int>(new int[] { 0, 4, 8, 12, 16, 20, 24 });
     List<int> r1_3 = new List<int>(new int[] { 0, 4, 8, 12, 16, 20, 24 });
@@ -84,7 +84,7 @@ public class BeatController : MonoBehaviour
         tickInterval = beatInterval / 4f;
 
         float musicLength = soundManager.musicChannel.clip.length;
-        numBars = (int)Mathf.Round(musicLength / (4f * beatInterval));
+        numBars = (int)Mathf.Round(musicLength / (8f * beatInterval));
 
         pattern = r1_2;
         /*patterns = new List<int>[] {
@@ -116,7 +116,6 @@ public class BeatController : MonoBehaviour
         
         if (t % 32 > tick || (t % 32 == 0 && tick > 0)) // TICK
         {
-            time -= tickInterval;
             tick = (tick + 1) % 32;
 
             if (tick % 4 == 0) // BEAT
@@ -134,6 +133,9 @@ public class BeatController : MonoBehaviour
 
             OnTick();
         }
+
+        
+        time = soundManager.musicChannel.time - ((bar % numBars) * 32 + tick) * tickInterval;
     }
 
     void OnTick()
@@ -193,6 +195,7 @@ public class BeatController : MonoBehaviour
 
     public void SelectPatterRandom()
     {
+        pattern = r1_2;
         //patternIndex = (patternIndex + 1) % patterns.Count;
         //pattern = patterns[patternIndex];
     }
@@ -210,7 +213,7 @@ public class BeatController : MonoBehaviour
                 dist = newDist;
             }
         }
-    
+
         return Mathf.Abs(closest * tickInterval - (tick * tickInterval + time));
     }
 

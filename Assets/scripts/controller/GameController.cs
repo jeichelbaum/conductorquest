@@ -167,6 +167,7 @@ public class GameController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
         {
             var dist = BeatController.instance.getDistanceClosestTick();
+
             if(dist < t_hitThreshold)
             {
                 OnSlashCorrect();
