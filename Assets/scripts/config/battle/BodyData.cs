@@ -18,6 +18,8 @@ public class BodyData : MonoBehaviour
     static string name_bone_shadow = "bone_shadow";
     static string name_sprite = "sprite";
 
+    public Material colorPattern;
+
     public Vector3 head_offset;
     public Vector3 armleft_offset;
     public Vector3 armright_offset;
@@ -59,6 +61,13 @@ public class BodyData : MonoBehaviour
         GetBoneSprite(b_armright).localPosition = armright_offset;
         GetBoneSprite(b_legs).localPosition = legs_offset;
         GetBoneSprite(b_shadow).localPosition = shadow_offset;
+
+        GetBoneSprite(b_body).GetComponent<SpriteRenderer>().material = colorPattern;
+        GetBoneSprite(b_head).GetComponent<SpriteRenderer>().material = colorPattern;
+        GetBoneSprite(b_armleft).GetComponent<SpriteRenderer>().material = colorPattern;
+        GetBoneSprite(b_armright).GetComponent<SpriteRenderer>().material = colorPattern;
+        GetBoneSprite(b_legs).GetComponent<SpriteRenderer>().material = colorPattern;
+        GetBoneSprite(b_shadow).GetComponent<SpriteRenderer>().material = colorPattern;
     }
 
     // used to display bone pivots in editor

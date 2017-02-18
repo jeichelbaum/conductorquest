@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+[System.Serializable]
 public class BeatController : MonoBehaviour
 {
     public static BeatController instance;
@@ -21,19 +23,22 @@ public class BeatController : MonoBehaviour
     public event LastPatternTick OnLastPatternTick;
 
     public float bpm = 120f;
+    [HideInInspector]
     public float beatInterval = 0f;
     float tickInterval = 0f;
 
-    public bool selectRandomPattern = false;
-
     float time = 0f;
+    [HideInInspector]
     public int tick = -1;
+    [HideInInspector]
     public int beat = -1;
+    [HideInInspector]
     public int bar = -1;
+    [HideInInspector]
     public bool isPlaying = false;
 
     // only 4ths
-    List<int> r1_1 = new List<int>(new int[] { 0, 4, 8, 16, 20, 24 });
+    /*List<int> r1_1 = new List<int>(new int[] { 0, 4, 8, 16, 20, 24 });
     List<int> r1_2 = new List<int>(new int[] { 0, 4, 8, 12, 16, 20, 24 });
     List<int> r1_3 = new List<int>(new int[] { 0, 4, 8, 12, 16, 20, 24 });
     List<int> r1_4 = new List<int>(new int[] { 0, 4, 12, 16, 20, 24 });
@@ -61,12 +66,11 @@ public class BeatController : MonoBehaviour
     List<int> r6_1 = new List<int>(new int[] { 0, 6, 12, 18, 24 });
     List<int> r6_2 = new List<int>(new int[] { 0, 6, 20, 24 });
     List<int> r6_3 = new List<int>(new int[] { 0, 9, 15, 24 });
-    List<int> r6_4 = new List<int>(new int[] { 0, 2, 19 });
-
-    public bool easyMode = true;
+    List<int> r6_4 = new List<int>(new int[] { 0, 2, 19 });*/
 
     int patternIndex = -1;
-    List<int>[] patterns;
+    //public List<int>[] patterns;
+    public List<List<int>> patterns;
     List<int> pattern;
 
     void Awake()
@@ -74,7 +78,7 @@ public class BeatController : MonoBehaviour
         beatInterval = 60f / bpm;
         tickInterval = beatInterval / 4f;
 
-        patterns = new List<int>[] {
+        /*patterns = new List<int>[] {
             r1_1, r1_2, r1_3, r1_4, r1_5,
             r2_1, r2_2, r2_3,
             r3_1, r3_2, r3_3, r3_4,
@@ -83,13 +87,10 @@ public class BeatController : MonoBehaviour
             r6_1, r6_2, r6_3, r6_4
         };
 
-        if (easyMode)
-        {
-            patterns = new List<int>[] {
-                r1_1, r1_2, r1_3, r1_4, r1_5,
-                r2_1, r2_2, r2_3
-            };
-        }
+        patterns = new List<int>[] {
+            r1_1, r1_2, r1_3, r1_4, r1_5,
+            r2_1, r2_2, r2_3
+        };*/
 
         instance = this;
     }
@@ -182,16 +183,8 @@ public class BeatController : MonoBehaviour
 
     public void SelectPatterRandom()
     {
-        if (selectRandomPattern)
-        {
-            var p = Random.Range(0, patterns.Length);
-            pattern = patterns[p];
-        } 
-        else
-        {
-            patternIndex = (patternIndex + 1) % patterns.Length;
-            pattern = patterns[patternIndex];
-        }
+        patternIndex = (patternIndex + 1) % patterns.Count;
+        pattern = patterns[patternIndex];
     }
 
     public float getDistanceClosestTick()

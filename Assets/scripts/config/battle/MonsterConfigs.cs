@@ -6,6 +6,7 @@ public class MonsterConfigs : MonoBehaviour {
 
     public static MonsterConfigs instance;
 
+    public Material[] colorPatterns;
     public GameObject[] monsterPrefabs;
 
     [HideInInspector]
