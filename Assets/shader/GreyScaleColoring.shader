@@ -94,7 +94,7 @@
 	else if (col.r < _Range5) {
 		col = _Color5 * float4(_Emission, _Emission, _Emission, col.a);
 	}
-	else if (col.r < _Range6) {
+	else if (col.r <= _Range6) {
 		col = _Color6 * float4(_Emission, _Emission, _Emission, col.a);
 	}
 
