@@ -12,6 +12,7 @@ public class GameController : MonoBehaviour {
     string state = "";
 
     // ------ views controlled by game controller
+    public GameObject startscreen;
     public IntroView intro;
     public TutorialView tutorial;
     public BackgroundView background;
@@ -79,7 +80,6 @@ public class GameController : MonoBehaviour {
     void EnterStateStart()
     {
         state = STATE_START;
-        SpawnNewMonster();
         player.HideForIntro();
         tutorial.Hide();
         healthbar.gameObject.SetActive(false);
@@ -89,6 +89,7 @@ public class GameController : MonoBehaviour {
     {
         if(InputButtonPressed())
         {
+            startscreen.SetActive(false);
             EnterStateIntro();
         }
     }
@@ -100,6 +101,7 @@ public class GameController : MonoBehaviour {
     void EnterStateIntro()
     {
         state = STATE_INTRO;
+        SpawnNewMonster();
         intro.PlayIntro(EnterStateTutorial);
     }
     
