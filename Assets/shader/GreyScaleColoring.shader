@@ -23,6 +23,12 @@
 		_Color6("Color", Color) = (1.0, 1.0, 1.0, 1.0)
 		_Range6("range", Range(0,1)) = 0.0
 
+		_Color7("Color", Color) = (1.0, 1.0, 1.0, 1.0)
+		_Range7("range", Range(0,1)) = 0.0
+
+		_Color8("Color", Color) = (1.0, 1.0, 1.0, 1.0)
+		_Range8("range", Range(0,1)) = 0.0
+
 	}
 		SubShader
 	{
@@ -65,6 +71,10 @@
 	float _Range5;
 	float4 _Color6;
 	float _Range6;
+	float4 _Color7;
+	float _Range7;
+	float4 _Color8;
+	float _Range8;
 
 	v2f vert(appdata v)
 	{
@@ -96,6 +106,12 @@
 	}
 	else if (col.r <= _Range6) {
 		col = _Color6 * float4(_Emission, _Emission, _Emission, col.a);
+	}
+	else if (col.r <= _Range7) {
+		col = _Color7 * float4(_Emission, _Emission, _Emission, col.a);
+	}
+	else if (col.r <= _Range8) {
+		col = _Color8 * float4(_Emission, _Emission, _Emission, col.a);
 	}
 
 		
