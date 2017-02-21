@@ -86,6 +86,7 @@ public class TutorialView : MonoBehaviour {
     {
         for(int i = marks.Count-1; i >= 0; i--)
         {
+            Debug.Log(index.ToString() + " , " + marks[i].Key.ToString());
             if(marks[i].Key == index)
             {
                 Destroy(marks[i].Value);

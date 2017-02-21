@@ -297,7 +297,7 @@ public class GameController : MonoBehaviour {
     {
         if (state == STATE_TUTORIAL)
         {
-            tutorial.OnPlayerMiss();
+            tutorial.OnPlayerHit();
         }
 
         SoundManager.instance.PlayRandomSwordSlash();
